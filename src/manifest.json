@@ -1,0 +1,12 @@
+{
+	"manifest_version": 1,
+	"id": "io.github.wwoods.JoplinPluginAutoTag",
+	"app_min_version": "1.7",
+	"version": "1.0.0",
+	"name": "Auto Tag",
+	"description": "Allows for setting up simple rules which automatically apply tags to matching notes",
+	"author": "Walt Woods",
+	"homepage_url": "",
+	"repository_url": "https://github.com/wwoods/joplin-plugin-auto-tag",
+	"keywords": []
+}
