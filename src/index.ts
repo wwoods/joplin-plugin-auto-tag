@@ -50,7 +50,7 @@ joplin.plugins.register({
         await Promise.all(promises);
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 10000));
     }
 	},
 });
@@ -85,10 +85,27 @@ async function* paginatedData(path, query=undefined) {
 
 
 async function tagNote(n: any, tagId: number) {
-  // Add only for now...
-  if (!n.is_todo) return;
+  // Any title matching e.g. 'd2022-01-22 ' will be converted
+  if (!/^d\d+-\d+-\d+ /.test(n.title)) {
+    return;
+  }
 
-  if (/^d\d+-\d+-\d+/.test(n.title)) {
+  if (!n.is_todo) {
+    // Convert to a todo
+    await joplin.data.put(['notes', `${n.id}`], null, {
+      is_todo: true,
+    });
+  }
+
+  // Ensure tagged
+  let sawTag = false;
+  for await (const tag of paginatedData(['notes', `${n.id}`, 'tags'])) {
+    if (tag.id === tagId) {
+      sawTag = true;
+      break;
+    }
+  }
+  if (!sawTag) {
     await joplin.data.post(['tags', `${tagId}`, 'notes'], null, {
       id: n.id,
     });
